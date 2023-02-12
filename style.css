@@ -22,6 +22,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 .chess-board-container {
@@ -66,4 +67,53 @@
 }
 .chess-board div.odd-row:nth-child(even) {
     background-color: var(--dark-squares);
+}
+
+img.Pawn {
+    height: 60%;
+    width: 60%;
+}
+
+img.Rook {
+    height: 65%;
+    width: 65%;
+}
+
+img.Knight {
+    height: 70%;
+    width: 70%;
+}
+img.Bishop {
+    height: 80%;
+    width: 80%;
+}
+img.King {
+    height: 80%;
+    width: 80%;
+}
+img.Queen {
+    height: 80%;
+    width: 80%;
+}
+
+#confirm-container {
+    visibility: hidden;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 10px;
+}
+
+.confirm-boxes {
+    display: flex;
+}
+
+.tick-cross-img {
+    height: 60px;
+}
+
+.tick-cross-img img {
+    height: 100%;
+    margin: 5px;
 }

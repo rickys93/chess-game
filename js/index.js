@@ -1,4 +1,18 @@
+const board = [
+    ["Rw", "Nw", "Bw", "Qw", ".", "Bw", "Nw", "Rw"],
+    ["Pw", "Pw", "Pw", "Pw", ".", "Pw", ".", "Pw"],
+    [".", ".", ".", "Pw", ".", ".", ".", "Pb"],
+    [".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", "Pw", "Pw", ".", ".", ".", "."],
+    [".", ".", "Pw", "Kw", "Pw", ".", ".", "."],
+    ["Pb", "Pb", "Pb", ".", "Pb", "Pb", "Pb", "Pb"],
+    ["Rb", "Nb", "Bb", "Qb", "Kb", "Bb", "Nb", "Rb"],
+];
+
 const boardSquares = document.getElementsByClassName("cell");
+const confirmContainer = document.getElementById("confirm-container");
+const confirmBox = document.getElementById("confirm-box");
+const cancelBox = document.getElementById("cancel-box");
 
 class Player {
     constructor(colour) {
@@ -6,20 +20,27 @@ class Player {
     }
 }
 
+function createBoardPieces(board) {
+    const boardObjects = [];
+    for (let x = 0; x < board.length; x++) {
+        const newRow = [];
+        for (let y = 0; y < board[0].length; y++) {
+            if (board[x][y] === ".") {
+                newRow.push(".");
+            } else {
+                const piece = getPieceObjectFromCoordinates(board, x, y);
+                newRow.push(piece);
+            }
+        }
+        boardObjects.push(newRow);
+    }
+    return boardObjects;
+}
+
 class Game {
     constructor() {
         this.currentPlayer = new Player("w");
         this.otherPlayer = new Player("b");
-        this.board = [
-            ["Rw", "Nw", "Bw", "Qw", ".", "Bw", "Nw", "Rw"],
-            ["Pw", "Pw", "Pw", "Pw", ".", "Pw", ".", "Pw"],
-            [".", ".", ".", "Pw", ".", ".", ".", "Pb"],
-            [".", ".", ".", ".", ".", ".", ".", "."],
-            [".", ".", "Pw", "Pw", ".", ".", ".", "."],
-            [".", ".", "Pw", "Kw", "Pw", ".", ".", "."],
-            ["Pb", "Pb", "Pb", ".", "Pb", "Pb", "Pb", "Pb"],
-            ["Rb", "Nb", "Bb", "Qb", "Kb", "Bb", "Nb", "Rb"],
-        ];
     }
 
     newGame() {
@@ -29,15 +50,17 @@ class Game {
     }
 
     initializeGame() {
+        this.board = createBoardPieces(board);
         for (let i = 0; i < boardSquares.length; i++) {
             let [x, y] = convertHtmlToDb(i);
 
-            const square = this.board[x][y];
+            const piece = this.board[x][y];
 
-            if (square[0] === "K") {
-                const colour = square[1];
-                if (this.currentPlayer.colour === colour) {
-                    this.currentPlayer.kingPosition = [x, y];
+            if (piece.constructor.name === "King") {
+                if (this.currentPlayer.colour === piece.colour) {
+                    this.currentPlayer.king = piece;
+                } else {
+                    this.otherPlayer.king = piece;
                 }
             }
         }
@@ -46,37 +69,42 @@ class Game {
     startPlayerTurn() {
         this.checkForCheck();
 
-        this.startRoundEventListeners();
+        this.restartEventListenersPieces();
+    }
 
+    endPlayerTurn() {
+        // switch currentPlayer and otherPlayer and start new round
         [this.currentPlayer, this.otherPlayer] = [
             this.otherPlayer,
             this.currentPlayer,
         ];
+
+        this.startPlayerTurn();
     }
 
-    startRoundEventListeners() {
-        // TO DO: I think we need to change the way we do this
-        // we should use this.board to set the html pieces on the board correctly
-        // then add event listeners at the same time
-        // for row in this.board... etc
-        for (let i = 0; i < boardSquares.length; i++) {
-            let [x, y] = convertHtmlToDb(i);
+    restartEventListenersPieces() {
+        for (let x = 0; x < this.board.length; x++) {
+            for (let y = 0; y < this.board[0].length; y++) {
+                const piece = this.board[x][y];
 
-            const square = this.board[x][y];
+                const i = convertDbToHtml([x, y]);
 
-            if (square !== ".") {
-                const pieceColour = square[1];
-                if (pieceColour !== this.currentPlayer.colour) {
-                    continue;
+                boardSquares[i].querySelector("div.target").style.display =
+                    "none";
+                clearEventListener(boardSquares[i]);
+                clearElementImg(boardSquares[i]);
+
+                if (piece !== ".") {
+                    if (piece.colour === this.currentPlayer.colour) {
+                        boardSquares[i].addEventListener(
+                            "click",
+                            findAvailableSquares
+                        );
+                    }
+
+                    // add image to square
+                    addImgToElement(piece, boardSquares[i]);
                 }
-
-                const newCell = boardSquares[i].cloneNode(true);
-                boardSquares[i].parentNode.replaceChild(
-                    newCell,
-                    boardSquares[i]
-                );
-
-                boardSquares[i].addEventListener("click", findAvailableSquares);
             }
         }
     }
@@ -88,21 +116,18 @@ class Game {
         for (let i = 0; i < boardSquares.length; i++) {
             let [x, y] = convertHtmlToDb(i);
 
-            const square = this.board[x][y];
+            const piece = this.board[x][y];
 
             // checking if there is a piece on the square
-            if (square !== ".") {
+            if (piece !== ".") {
                 // making sure it's the other player's piece
-                const pieceColour = square[1];
-                if (pieceColour === this.currentPlayer.colour) {
+                if (piece.colour === this.currentPlayer.colour) {
                     continue;
                 }
 
-                const pieceString = game.board[x][y][0];
-                const piece = new pieceObjects[pieceString](pieceColour);
                 // going to add up all the other player's possible moves into one array
                 const { possibleMoves, possibleTargets, ownPieces } =
-                    piece.availableMoves([x, y], game.board);
+                    piece.availableMoves(this.board);
 
                 totalPossibleMoves = totalPossibleMoves.concat(possibleMoves);
                 totalPossibleTargets =
@@ -112,7 +137,7 @@ class Game {
         }
         // now we can check if the king is in check
         if (
-            arrayInArray(this.currentPlayer.kingPosition, totalPossibleTargets)
+            arrayInArray(this.currentPlayer.king.position, totalPossibleTargets)
         ) {
             this.currentPlayer.check = true;
         } else {
@@ -122,11 +147,8 @@ class Game {
 
         // if king is in check, we need to see if it can move to any squares
         // find all king's possible moves and find if any of them are not in the arrays
-        const king = new King(this.currentPlayer.colour);
-        const { possibleMoves, possibleTargets } = king.availableMoves(
-            this.currentPlayer.kingPosition,
-            this.board
-        );
+        const { possibleMoves, possibleTargets } =
+            this.currentPlayer.king.availableMoves(this.board);
         const totalKingMoves = possibleMoves.concat(possibleTargets);
         const totalOpponentMoves = totalPossibleMoves.concat(
             totalPossibleTargets,
@@ -161,8 +183,8 @@ const pieceObjects = {
 const game = new Game();
 game.newGame();
 
-function convertDbToHtml(coor) {
-    return coor[0] * 8 + coor[1];
+function convertDbToHtml([x, y]) {
+    return x * 8 + y;
 }
 
 function convertHtmlToDb(coor) {
@@ -186,43 +208,69 @@ function clearEventListener(element) {
     element.parentNode.replaceChild(newCell, element);
 }
 
+function clearElementImg(element) {
+    // remove any current images
+    const pieceImage = element.querySelector("img");
+    if (pieceImage) {
+        pieceImage.remove();
+    }
+}
+
 function clearAllEventListeners() {
     for (let i = 0; i < boardSquares.length; i++) {
         clearEventListener(boardSquares[i]);
     }
 }
 
-function getPieceObjectFromCoordinates(x, y) {
-    const pieceString = game.board[x][y][0];
-    const pieceColour = game.board[x][y][1];
+function getPieceObjectFromCoordinates(board, x, y) {
+    const pieceString = board[x][y][0];
+    const pieceColour = board[x][y][1];
 
-    const piece = new pieceObjects[pieceString](pieceColour);
+    const piece = new pieceObjects[pieceString](pieceColour, [x, y]);
     return piece;
 }
 
-function getCoordinatesFromEvent(e) {
-    const square = e.target;
-    const x = parseInt(square.id[0]);
-    const y = parseInt(square.id[1]);
+function addImgToElement(piece, element) {
+    const img = document.createElement("img");
+
+    img.src = piece.url;
+    img.className = piece.constructor.name;
+
+    element.appendChild(img);
+}
+
+function getCoordinatesFromElement(target) {
+    const x = parseInt(target.id[0]);
+    const y = parseInt(target.id[1]);
     return [x, y];
 }
 
+function findTargetFromEvent(e) {
+    let target;
+    if (e.target.tagName === "IMG" || e.target.className === "target") {
+        target = e.target.parentNode;
+    } else {
+        target = e.target;
+    }
+    return target;
+}
+
 function findAvailableSquares(e) {
-    [x, y] = getCoordinatesFromEvent(e);
-
-    game.currentPiece = [x, y];
-
-    const piece = getPieceObjectFromCoordinates(x, y);
-
-    const { possibleMoves, possibleTargets, ownPieces } = piece.availableMoves(
-        [x, y],
-        game.board
-    );
-
     clearAllEventListeners();
 
+    target = findTargetFromEvent(e);
+    [x, y] = getCoordinatesFromElement(target);
+
+    game.selectedPiece = game.board[x][y];
+
+    const { possibleMoves, possibleTargets } =
+        game.selectedPiece.availableMoves(game.board);
+
+    const index = convertDbToHtml([x, y]);
+    boardSquares[index].addEventListener("click", clearPieceSelection);
+
     possibleMoves.forEach((sq) => {
-        const index = convertDbToHtml(sq);
+        const index = convertDbToHtml([sq[0], sq[1]]);
 
         boardSquares[index].querySelector(".target").style.display = "inline";
 
@@ -230,30 +278,48 @@ function findAvailableSquares(e) {
     });
 
     possibleTargets.forEach((sq) => {
-        const index = convertDbToHtml(sq);
+        const index = convertDbToHtml([sq[0], sq[1]]);
 
         boardSquares[index].querySelector(".target").style.backgroundColor =
             "red";
         boardSquares[index].querySelector(".target").style.display = "inline";
+
+        boardSquares[index].addEventListener("click", takePiece);
     });
 }
 
-function movePiece(e) {
-    const [px, py] = game.currentPiece;
-    const piece = getPieceObjectFromCoordinates(x, y);
-    [ex, ey] = getCoordinatesFromEvent(e);
-
-    // do this and then clear all event listeners while we wait to confirm
-    // if not confirmed, reset the round from the game.board
-    movePieceOnHtml([px, py], [ex, ey]);
-
-    // I think we don't want to move the piece on the board yet - just html
-    // then we would just need to reset the html board and startRoundEventListeners()
-    // if the move is not confirmed
-
-    // Once confirmed we can move the piece on the board and start next round.
-    movePieceOnBoard([px, py], [ex, ey]);
+function clearAllTargets() {
+    for (let i = 0; i < boardSquares.length; i++) {
+        getTargetElementFromIndex(i).style.display = "none";
+    }
 }
+
+function getTargetElementFromIndex(i) {
+    return boardSquares[i].querySelector(".target");
+}
+
+function clearPieceSelection(e) {
+    game.selectedPiece = [];
+    game.restartEventListenersPieces();
+}
+
+function movePiece(e) {
+    clearAllEventListeners();
+    clearAllTargets();
+
+    const target = findTargetFromEvent(e);
+    const [x, y] = getCoordinatesFromElement(target);
+
+    game.selectedPiece.pendingPosition = [x, y];
+
+    // move piece in html and then clear all event listeners while we wait to confirm
+    // if not confirmed, reset the round from the game.board
+    game.selectedPiece.moveOnHtml();
+
+    confirmContainer.style.visibility = "visible";
+}
+
+function takePiece(e) {}
 
 function movePieceOnBoard(from, to) {
     const pieceString = board[from[0]][from[1]];
@@ -261,4 +327,15 @@ function movePieceOnBoard(from, to) {
     board[to[0]][to[1]] = pieceString;
 }
 
-function movePieceOnHtml(from, to) {}
+confirmBox.addEventListener("click", confirmMove);
+cancelBox.addEventListener("click", cancelMove);
+
+function confirmMove() {
+    game.selectedPiece.confirmMove();
+    confirmContainer.style.visibility = "hidden";
+}
+
+function cancelMove() {
+    game.restartEventListenersPieces();
+    confirmContainer.style.visibility = "hidden";
+}

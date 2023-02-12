@@ -1,6 +1,7 @@
 class Piece {
-    constructor(colour) {
+    constructor(colour, position) {
         this.colour = colour;
+        this.position = position;
     }
 
     squareOnBoard(x, y, board) {
@@ -27,12 +28,47 @@ class Piece {
         }
         return true;
     }
+
+    moveOnHtml() {
+        const fromIndex = convertDbToHtml(this.position);
+        const toIndex = convertDbToHtml(this.pendingPosition);
+
+        clearElementImg(boardSquares[fromIndex]);
+
+        addImgToElement(this, boardSquares[toIndex]);
+    }
+
+    confirmMove() {
+        const [cx, cy] = this.position;
+        const [px, py] = this.pendingPosition;
+
+        // TO DO:
+        // This is where we make the api call to validate the move
+
+        game.board[cx][cy] = ".";
+        game.board[px][py] = this;
+
+        game.endPlayerTurn();
+
+        confirmContainer.style.visibility = "hidden";
+    }
+
+    get url() {
+        let url;
+        if (this.colour === "b") {
+            url = this.imageUrl;
+        } else {
+            url = this.imageUrl.slice(0, -4) + "-white.png";
+        }
+        return url;
+    }
 }
 
 class Pawn extends Piece {
-    constructor(colour) {
-        super(colour);
+    constructor(colour, position) {
+        super(colour, position);
         this.direction = this.findDirection();
+        this.imageUrl = "./images/pawn.png";
     }
 
     findDirection() {
@@ -43,11 +79,11 @@ class Pawn extends Piece {
         }
     }
 
-    availableMoves(currentPosition, board) {
+    availableMoves(board) {
         const possibleMoves = [];
         const ownPieces = [];
-        const x = currentPosition[0];
-        const y = currentPosition[1];
+        const x = this.position[0];
+        const y = this.position[1];
         for (let i = 1; i <= 2; i++) {
             if (board[x + i * this.direction][y] !== ".") {
                 break;
@@ -82,8 +118,9 @@ class Pawn extends Piece {
 }
 
 class King extends Piece {
-    constructor(colour) {
-        super(colour);
+    constructor(colour, position) {
+        super(colour, position);
+        this.imageUrl = "./images/king.png";
         this.directions = [
             [0, 1],
             [1, 0],
@@ -96,13 +133,13 @@ class King extends Piece {
         ];
     }
 
-    availableMoves(currentPosition, board) {
+    availableMoves(board) {
         const ownPieces = [];
         const possibleMoves = [];
         const possibleTargets = [];
         this.directions.forEach((d) => {
-            let x = currentPosition[0] + d[0];
-            let y = currentPosition[1] + d[1];
+            let x = this.position[0] + d[0];
+            let y = this.position[1] + d[1];
 
             if (!this.squareOnBoard(x, y, board)) {
                 return;
@@ -122,17 +159,17 @@ class King extends Piece {
 }
 
 class AgilePiece extends Piece {
-    constructor(colour) {
-        super(colour);
+    constructor(colour, position) {
+        super(colour, position);
     }
 
-    availableMoves(currentPosition, board) {
+    availableMoves(board) {
         const ownPieces = [];
         const possibleMoves = [];
         const possibleTargets = [];
         this.directions.forEach((d) => {
-            let x = currentPosition[0] + d[0];
-            let y = currentPosition[1] + d[1];
+            let x = this.position[0] + d[0];
+            let y = this.position[1] + d[1];
             while (0 <= x && x < board.length && 0 <= y && y < board.length) {
                 let square = board[x][y];
                 if (
@@ -156,8 +193,9 @@ class AgilePiece extends Piece {
 }
 
 class Knight extends Piece {
-    constructor(colour) {
-        super(colour);
+    constructor(colour, position) {
+        super(colour, position);
+        this.imageUrl = "./images/knight.png";
         this.possibleMoves = [
             [2, 1],
             [1, 2],
@@ -170,13 +208,13 @@ class Knight extends Piece {
         ];
     }
 
-    availableMoves(currentPosition, board) {
+    availableMoves(board) {
         const ownPieces = [];
         const possibleMoves = [];
         const possibleTargets = [];
         this.possibleMoves.forEach((d) => {
-            const x = currentPosition[0] + d[0];
-            const y = currentPosition[1] + d[1];
+            const x = this.position[0] + d[0];
+            const y = this.position[1] + d[1];
 
             if (!this.squareOnBoard(x, y, board)) {
                 return;
@@ -197,8 +235,9 @@ class Knight extends Piece {
 }
 
 class Bishop extends AgilePiece {
-    constructor(colour) {
-        super(colour);
+    constructor(colour, position) {
+        super(colour, position);
+        this.imageUrl = "./images/bishop.png";
         this.directions = [
             [1, 1],
             [-1, 1],
@@ -209,8 +248,9 @@ class Bishop extends AgilePiece {
 }
 
 class Rook extends AgilePiece {
-    constructor(colour) {
-        super(colour);
+    constructor(colour, position) {
+        super(colour, position);
+        this.imageUrl = "./images/rook.png";
         this.directions = [
             [0, 1],
             [1, 0],
@@ -221,8 +261,9 @@ class Rook extends AgilePiece {
 }
 
 class Queen extends AgilePiece {
-    constructor(colour) {
-        super(colour);
+    constructor(colour, position) {
+        super(colour, position);
+        this.imageUrl = "./images/queen.png";
         this.directions = [
             [0, 1],
             [1, 0],
