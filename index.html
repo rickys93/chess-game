@@ -4,9 +4,8 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="./style.css" />
-        <script defer src="./js/pieces.js"></script>
-        <script defer src="./js/index.js"></script>
+        <link rel="stylesheet" href="./css/style.css" />
+        <script defer src="./bundle.js"></script>
         <title>Document</title>
     </head>
     <body>
@@ -205,6 +204,23 @@
                         </div>
                         <div class="cell even-row" id="77">
                             <div class="target"></div>
+                        </div>
+                    </div>
+                    <div class="full-screen flex-container-center" id="pop-up">
+                        <div class="flex-container-center pop-up-center">
+                            <div class="flex-container-center pop-up-message">
+                                <h2>
+                                    <span id="win-method"></span>!
+                                    <span id="player-colour"></span> wins!
+                                </h2>
+                                <h2>Keep on playing, keep on learning!</h2>
+                                <button
+                                    class="button-colours small-button button-border"
+                                    id="close-popup-button"
+                                >
+                                    Close
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,26 @@
+img.Pawn {
+    height: 60%;
+    width: 60%;
+}
+
+img.Rook {
+    height: 65%;
+    width: 65%;
+}
+
+img.Knight {
+    height: 65%;
+    width: 65%;
+}
+img.Bishop {
+    height: 80%;
+    width: 80%;
+}
+img.King {
+    height: 90%;
+    width: 90%;
+}
+img.Queen {
+    height: 77%;
+    width: 77%;
+}

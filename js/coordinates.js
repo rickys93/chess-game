@@ -9,8 +9,6 @@ for (let x = 0; x < 9; x++) {
     coordinates.push(row);
 }
 
-console.log(coordinates);
-
 const startingBoard = [
     ["R", "N", "B", "Q", "K", "B", "N", "R"],
     ["P", "P", "P", "P", "P", "P", "P", "P"],

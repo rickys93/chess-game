@@ -2,6 +2,7 @@ class Piece {
     constructor(colour, position) {
         this.colour = colour;
         this.position = position;
+        this.pendingPosition = null;
     }
 
     squareOnBoard(x, y, board) {
@@ -11,16 +12,16 @@ class Piece {
     checkSquareNeedsAdding(
         x,
         y,
-        square,
+        piece,
         possibleMoves,
         possibleTargets,
         ownPieces
     ) {
-        if (square !== ".") {
-            if (square[1] !== this.colour) {
-                possibleTargets.push([x, y]);
+        if (piece !== ".") {
+            if (piece.colour !== this.colour) {
+                possibleTargets.push(piece.position);
             } else {
-                ownPieces.push([x, y]);
+                ownPieces.push(piece.position);
             }
             return false;
         } else {
@@ -38,15 +39,27 @@ class Piece {
         addImgToElement(this, boardSquares[toIndex]);
     }
 
+    takeOnHtml() {
+        const fromIndex = convertDbToHtml(this.position);
+        const toIndex = convertDbToHtml(this.pendingPosition);
+
+        clearElementImg(boardSquares[fromIndex]);
+        clearElementImg(boardSquares[toIndex]);
+
+        addImgToElement(this, boardSquares[toIndex]);
+    }
+
     confirmMove() {
-        const [cx, cy] = this.position;
-        const [px, py] = this.pendingPosition;
+        if (game.targettedPiece) {
+        }
 
         // TO DO:
         // This is where we make the api call to validate the move
 
-        game.board[cx][cy] = ".";
-        game.board[px][py] = this;
+        game.board = moveOnBoard(game.board, this, this.pendingPosition);
+
+        this.position = this.pendingPosition;
+        this.pendingPosition = null;
 
         game.endPlayerTurn();
 
@@ -103,10 +116,10 @@ class Pawn extends Piece {
             if (!this.squareOnBoard(x, y, board)) {
                 return;
             }
-            const square = board[x][y];
+            const piece = board[x][y];
 
-            if (square !== ".") {
-                if (square[1] !== this.colour) {
+            if (piece !== ".") {
+                if (piece.colour !== this.colour) {
                     possibleTargets.push([x, y]);
                 } else {
                     ownPieces.push([x, y]);
@@ -144,11 +157,11 @@ class King extends Piece {
             if (!this.squareOnBoard(x, y, board)) {
                 return;
             }
-            const square = board[x][y];
+            const piece = board[x][y];
             this.checkSquareNeedsAdding(
                 x,
                 y,
-                square,
+                piece,
                 possibleMoves,
                 possibleTargets,
                 ownPieces
@@ -171,12 +184,12 @@ class AgilePiece extends Piece {
             let x = this.position[0] + d[0];
             let y = this.position[1] + d[1];
             while (0 <= x && x < board.length && 0 <= y && y < board.length) {
-                let square = board[x][y];
+                let piece = board[x][y];
                 if (
                     !this.checkSquareNeedsAdding(
                         x,
                         y,
-                        square,
+                        piece,
                         possibleMoves,
                         possibleTargets,
                         ownPieces
@@ -219,12 +232,12 @@ class Knight extends Piece {
             if (!this.squareOnBoard(x, y, board)) {
                 return;
             }
-            const square = board[x][y];
+            const piece = board[x][y];
 
             this.checkSquareNeedsAdding(
                 x,
                 y,
-                square,
+                piece,
                 possibleMoves,
                 possibleTargets,
                 ownPieces
@@ -276,3 +289,5 @@ class Queen extends AgilePiece {
         ];
     }
 }
+
+module.exports = { Pawn, Rook, Bishop, Knight, Queen, King };
