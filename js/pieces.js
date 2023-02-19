@@ -5,27 +5,24 @@ class Piece {
         this.pendingPosition = null;
     }
 
-    squareOnBoard(x, y, board) {
-        return 0 <= x && x < board.length && 0 <= y && y < board.length;
+    squareOnBoard(row, col, board) {
+        return 0 <= row && row < board.length && 0 <= col && col < board.length;
     }
 
-    checkSquareNeedsAdding(
-        x,
-        y,
-        piece,
-        possibleMoves,
-        possibleTargets,
-        ownPieces
-    ) {
-        if (piece !== ".") {
+    select(board) {
+        this.availableMoves(board);
+    }
+
+    checkSquareNeedsAdding(piece, row, col) {
+        if (piece) {
             if (piece.colour !== this.colour) {
-                possibleTargets.push(piece.position);
+                this.possibleTakes.add(piece.position);
             } else {
-                ownPieces.push(piece.position);
+                this.ownPieces.add(piece.position);
             }
             return false;
         } else {
-            possibleMoves.push([x, y]);
+            this.possibleMoves.add([row, col]);
         }
         return true;
     }
@@ -93,40 +90,41 @@ class Pawn extends Piece {
     }
 
     availableMoves(board) {
-        const possibleMoves = [];
-        const ownPieces = [];
-        const x = this.position[0];
-        const y = this.position[1];
+        this.possibleMoves = new Set();
+        this.possibleTakes = new Set();
+        this.ownPieces = new Set();
+        const row = this.position[0];
+        const col = this.position[1];
+
         for (let i = 1; i <= 2; i++) {
-            if (board[x + i * this.direction][y] !== ".") {
+            const piece = board[row + i * this.direction][col];
+            if (piece) {
                 break;
             } else {
-                possibleMoves.push([x + i * this.direction, y]);
+                this.possibleMoves.add([row + i * this.direction, col]);
             }
         }
 
-        const possibleTakes = [
-            [x + 1 * this.direction, y + 1],
-            [x + 1 * this.direction, y - 1],
+        const potentialTakes = [
+            [row + 1 * this.direction, col + 1],
+            [row + 1 * this.direction, col - 1],
         ];
-        const possibleTargets = [];
-        possibleTakes.forEach((coor) => {
-            let x = coor[0];
-            let y = coor[1];
-            if (!this.squareOnBoard(x, y, board)) {
+        potentialTakes.forEach((coor) => {
+            let row = coor[0];
+            let col = coor[1];
+            if (!this.squareOnBoard(row, col, board)) {
                 return;
             }
-            const piece = board[x][y];
+            const piece = board[row][col];
 
-            if (piece !== ".") {
+            if (piece) {
                 if (piece.colour !== this.colour) {
-                    possibleTargets.push([x, y]);
+                    this.possibleTakes.add([row, col]);
                 } else {
-                    ownPieces.push([x, y]);
+                    this.ownPieces.add([row, col]);
                 }
             }
         });
-        return { possibleMoves, possibleTargets, ownPieces };
     }
 }
 
@@ -147,27 +145,19 @@ class King extends Piece {
     }
 
     availableMoves(board) {
-        const ownPieces = [];
-        const possibleMoves = [];
-        const possibleTargets = [];
+        this.ownPieces = new Set();
+        this.possibleMoves = new Set();
+        this.possibleTakes = new Set();
         this.directions.forEach((d) => {
-            let x = this.position[0] + d[0];
-            let y = this.position[1] + d[1];
+            let row = this.position[0] + d[0];
+            let col = this.position[1] + d[1];
 
-            if (!this.squareOnBoard(x, y, board)) {
+            if (!this.squareOnBoard(row, col, board)) {
                 return;
             }
-            const piece = board[x][y];
-            this.checkSquareNeedsAdding(
-                x,
-                y,
-                piece,
-                possibleMoves,
-                possibleTargets,
-                ownPieces
-            );
+            const piece = board[row][col];
+            this.checkSquareNeedsAdding(piece, row, col);
         });
-        return { possibleMoves, possibleTargets, ownPieces };
     }
 }
 
@@ -177,31 +167,26 @@ class AgilePiece extends Piece {
     }
 
     availableMoves(board) {
-        const ownPieces = [];
-        const possibleMoves = [];
-        const possibleTargets = [];
+        this.ownPieces = new Set();
+        this.possibleMoves = new Set();
+        this.possibleTakes = new Set();
         this.directions.forEach((d) => {
-            let x = this.position[0] + d[0];
-            let y = this.position[1] + d[1];
-            while (0 <= x && x < board.length && 0 <= y && y < board.length) {
-                let piece = board[x][y];
-                if (
-                    !this.checkSquareNeedsAdding(
-                        x,
-                        y,
-                        piece,
-                        possibleMoves,
-                        possibleTargets,
-                        ownPieces
-                    )
-                ) {
+            let row = this.position[0] + d[0];
+            let col = this.position[1] + d[1];
+            while (
+                0 <= row &&
+                row < board.length &&
+                0 <= col &&
+                col < board.length
+            ) {
+                let piece = board[row][col];
+                if (!this.checkSquareNeedsAdding(piece, row, col)) {
                     break;
                 }
-                x += d[0];
-                y += d[1];
+                row += d[0];
+                col += d[1];
             }
         });
-        return { possibleMoves, possibleTargets, ownPieces };
     }
 }
 
@@ -209,7 +194,7 @@ class Knight extends Piece {
     constructor(colour, position) {
         super(colour, position);
         this.imageUrl = "./images/knight.png";
-        this.possibleMoves = [
+        this.potentialMoves = [
             [2, 1],
             [1, 2],
             [-2, 1],
@@ -222,28 +207,21 @@ class Knight extends Piece {
     }
 
     availableMoves(board) {
-        const ownPieces = [];
-        const possibleMoves = [];
-        const possibleTargets = [];
-        this.possibleMoves.forEach((d) => {
-            const x = this.position[0] + d[0];
-            const y = this.position[1] + d[1];
+        this.ownPieces = new Set();
+        this.possibleMoves = new Set();
+        this.possibleTakes = new Set();
+        this.potentialMoves.forEach((d) => {
+            const row = this.position[0] + d[0];
+            const col = this.position[1] + d[1];
 
-            if (!this.squareOnBoard(x, y, board)) {
+            if (!this.squareOnBoard(row, col, board)) {
                 return;
             }
-            const piece = board[x][y];
 
-            this.checkSquareNeedsAdding(
-                x,
-                y,
-                piece,
-                possibleMoves,
-                possibleTargets,
-                ownPieces
-            );
+            const piece = board[row][col];
+
+            this.checkSquareNeedsAdding(piece, row, col);
         });
-        return { possibleMoves, possibleTargets, ownPieces };
     }
 }
 
@@ -289,5 +267,3 @@ class Queen extends AgilePiece {
         ];
     }
 }
-
-module.exports = { Pawn, Rook, Bishop, Knight, Queen, King };

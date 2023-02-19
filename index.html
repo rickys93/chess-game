@@ -5,12 +5,18 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./css/style.css" />
-        <script defer src="./bundle.js"></script>
+        <script defer src="./js/helpers.js"></script>
+        <script defer src="./js/pieces.js"></script>
+        <script defer src="./js/players.js"></script>
+        <script defer src="./js/board.js"></script>
+        <script defer src="./js/ui.js"></script>
+        <script defer src="./js/game.js"></script>
+        <script defer src="./js/main.js"></script>
         <title>Document</title>
     </head>
     <body>
         <nav class="navigation-bar">
-            <a class="logo" href="./index.html">Florin County Council</a>
+            <a class="logo" href="./index.html">Chess</a>
             <div class="nav-right">
                 <button
                     class="button-colours display-none"
@@ -91,197 +97,197 @@
         </div>
         <div class="main-container">
             <div class="chess-board-container">
-                <div class="chess-board">
-                    <div class="cell odd-row" id="00">
+                <div class="chess-board" id="board">
+                    <div class="cell odd-row" data-row="0" data-col="0">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="01">
+                    <div class="cell odd-row" data-row="0" data-col="1">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="02">
+                    <div class="cell odd-row" data-row="0" data-col="2">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="03">
+                    <div class="cell odd-row" data-row="0" data-col="3">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="04">
+                    <div class="cell odd-row" data-row="0" data-col="4">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="05">
+                    <div class="cell odd-row" data-row="0" data-col="5">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="06">
+                    <div class="cell odd-row" data-row="0" data-col="6">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="07">
+                    <div class="cell odd-row" data-row="0" data-col="7">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="10">
+                    <div class="cell even-row" data-row="1" data-col="0">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="11">
+                    <div class="cell even-row" data-row="1" data-col="1">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="12">
+                    <div class="cell even-row" data-row="1" data-col="2">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="13">
+                    <div class="cell even-row" data-row="1" data-col="3">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="14">
+                    <div class="cell even-row" data-row="1" data-col="4">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="15">
+                    <div class="cell even-row" data-row="1" data-col="5">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="16">
+                    <div class="cell even-row" data-row="1" data-col="6">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="17">
+                    <div class="cell even-row" data-row="1" data-col="7">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="20">
+                    <div class="cell odd-row" data-row="2" data-col="0">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="21">
+                    <div class="cell odd-row" data-row="2" data-col="1">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="22">
+                    <div class="cell odd-row" data-row="2" data-col="2">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="23">
+                    <div class="cell odd-row" data-row="2" data-col="3">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="24">
+                    <div class="cell odd-row" data-row="2" data-col="4">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="25">
+                    <div class="cell odd-row" data-row="2" data-col="5">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="26">
+                    <div class="cell odd-row" data-row="2" data-col="6">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="27">
+                    <div class="cell odd-row" data-row="2" data-col="7">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="30">
+                    <div class="cell even-row" data-row="3" data-col="0">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="31">
+                    <div class="cell even-row" data-row="3" data-col="1">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="32">
+                    <div class="cell even-row" data-row="3" data-col="2">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="33">
+                    <div class="cell even-row" data-row="3" data-col="3">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="34">
+                    <div class="cell even-row" data-row="3" data-col="4">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="35">
+                    <div class="cell even-row" data-row="3" data-col="5">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="36">
+                    <div class="cell even-row" data-row="3" data-col="6">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="37">
+                    <div class="cell even-row" data-row="3" data-col="7">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="40">
+                    <div class="cell odd-row" data-row="4" data-col="0">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="41">
+                    <div class="cell odd-row" data-row="4" data-col="1">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="42">
+                    <div class="cell odd-row" data-row="4" data-col="2">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="43">
+                    <div class="cell odd-row" data-row="4" data-col="3">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="44">
+                    <div class="cell odd-row" data-row="4" data-col="4">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="45">
+                    <div class="cell odd-row" data-row="4" data-col="5">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="46">
+                    <div class="cell odd-row" data-row="4" data-col="6">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="47">
+                    <div class="cell odd-row" data-row="4" data-col="7">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="50">
+                    <div class="cell even-row" data-row="5" data-col="0">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="51">
+                    <div class="cell even-row" data-row="5" data-col="1">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="52">
+                    <div class="cell even-row" data-row="5" data-col="2">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="53">
+                    <div class="cell even-row" data-row="5" data-col="3">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="54">
+                    <div class="cell even-row" data-row="5" data-col="4">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="55">
+                    <div class="cell even-row" data-row="5" data-col="5">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="56">
+                    <div class="cell even-row" data-row="5" data-col="6">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="57">
+                    <div class="cell even-row" data-row="5" data-col="7">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="60">
+                    <div class="cell odd-row" data-row="6" data-col="0">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="61">
+                    <div class="cell odd-row" data-row="6" data-col="1">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="62">
+                    <div class="cell odd-row" data-row="6" data-col="2">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="63">
+                    <div class="cell odd-row" data-row="6" data-col="3">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="64">
+                    <div class="cell odd-row" data-row="6" data-col="4">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="65">
+                    <div class="cell odd-row" data-row="6" data-col="5">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="66">
+                    <div class="cell odd-row" data-row="6" data-col="6">
                         <div class="target"></div>
                     </div>
-                    <div class="cell odd-row" id="67">
+                    <div class="cell odd-row" data-row="6" data-col="7">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="70">
+                    <div class="cell even-row" data-row="7" data-col="0">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="71">
+                    <div class="cell even-row" data-row="7" data-col="1">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="72">
+                    <div class="cell even-row" data-row="7" data-col="2">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="73">
+                    <div class="cell even-row" data-row="7" data-col="3">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="74">
+                    <div class="cell even-row" data-row="7" data-col="4">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="75">
+                    <div class="cell even-row" data-row="7" data-col="5">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="76">
+                    <div class="cell even-row" data-row="7" data-col="6">
                         <div class="target"></div>
                     </div>
-                    <div class="cell even-row" id="77">
+                    <div class="cell even-row" data-row="7" data-col="7">
                         <div class="target"></div>
                     </div>
                 </div>

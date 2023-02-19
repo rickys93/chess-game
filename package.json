@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watchAll",
-    "watch" : "watchify ./js/index.js -o bundle.js"
+    "watch": "watchify ./js/main.js -o bundle.js -d"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +20,8 @@
     "jest-environment-jsdom": "^29.4.3",
     "jsdom": "^21.1.0",
     "watchify": "^4.0.0"
+  },
+  "dependencies": {
+    "source-map-support": "^0.5.21"
   }
 }
