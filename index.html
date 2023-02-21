@@ -15,9 +15,27 @@
         <title>Document</title>
     </head>
     <body>
-        <nav class="navigation-bar">
+        <div class="category-sidebar">
             <a class="logo" href="./index.html">Chess</a>
-            <div class="nav-right">
+            <div class="sidebar-button-container">
+                <button
+                    id="create-new-event"
+                    class="button-colours-reverse display-none"
+                    type="submit"
+                >
+                    Start New Game &#43;
+                </button>
+            </div>
+            <div class="sidebar-button-container">
+                <button
+                    id="my-events-button"
+                    class="button-colours-reverse display-none"
+                    type="submit"
+                >
+                    My Games
+                </button>
+            </div>
+            <div class="sidebar-button-container">
                 <button
                     class="button-colours display-none"
                     id="log-in-button"
@@ -25,6 +43,8 @@
                 >
                     Log In
                 </button>
+            </div>
+            <div class="sidebar-button-container">
                 <button
                     class="button-colours display-none"
                     id="sign-up-button"
@@ -32,12 +52,8 @@
                 >
                     Sign Up
                 </button>
-                <div
-                    id="display-username-container"
-                    class="display-username display-none"
-                >
-                    Welcome, <span id="display-username"></span>!
-                </div>
+            </div>
+            <div class="sidebar-button-container">
                 <button
                     class="button-colours display-none"
                     id="log-out-button"
@@ -46,54 +62,6 @@
                     Log Out
                 </button>
             </div>
-        </nav>
-        <div class="category-sidebar">
-            <ul class="category-list">
-                <div class="sidebar-button-container">
-                    <input
-                        type="text"
-                        name="search"
-                        id="search"
-                        placeholder="🔎︎ Search..."
-                    />
-                </div>
-                <div class="sidebar-button-container">
-                    <button
-                        id="create-new-event"
-                        class="button-colours-reverse display-none"
-                        type="submit"
-                    >
-                        Create Event &#43;
-                    </button>
-                </div>
-                <div class="sidebar-button-container">
-                    <button
-                        id="my-events-button"
-                        class="button-colours-reverse display-none"
-                        type="submit"
-                    >
-                        My Events
-                    </button>
-                </div>
-                <li class="category-list-item" id="category-all">All</li>
-                <li class="category-list-item" id="category-festival">
-                    Festivals
-                </li>
-                <li class="category-list-item" id="category-music">Music</li>
-                <li class="category-list-item" id="category-charity">
-                    Charity
-                </li>
-                <li class="category-list-item" id="category-education">
-                    Education
-                </li>
-                <li class="category-list-item" id="category-art">
-                    Arts and Culture
-                </li>
-                <li class="category-list-item" id="category-family">Family</li>
-                <li class="category-list-item" id="category-business">
-                    Business
-                </li>
-            </ul>
         </div>
         <div class="main-container">
             <div class="chess-board-container">
@@ -291,7 +259,7 @@
                         <div class="target"></div>
                     </div>
                 </div>
-                <!-- <div class="full-screen flex-container-center" id="pop-up">
+                <div class="full-screen flex-container-center" id="pop-up">
                     <div class="flex-container-center pop-up-center">
                         <div class="flex-container-center pop-up-message">
                             <h2>
@@ -307,7 +275,7 @@
                             </button>
                         </div>
                     </div>
-                </div> -->
+                </div>
             </div>
             <!-- <div id="confirm-container">
                 <div class="confirm-title">CONFIRM MOVE?</div>

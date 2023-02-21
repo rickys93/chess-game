@@ -35,3 +35,11 @@ function deepCopy(board) {
     }
     return copy;
 }
+
+function findTargetFromEvent(e) {
+    if (e.className && e.className.includes("cell")) {
+        return e;
+    }
+
+    return this.findTargetFromEvent(e.parentNode);
+}

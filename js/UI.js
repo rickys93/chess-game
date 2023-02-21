@@ -22,7 +22,7 @@ class UI {
 
     selectPiece() {
         const piece = this.game.selectedPiece;
-        this.highlightPiece(piece);
+        this.highlightSquare(piece.position);
 
         for (let [row, col] of piece.possibleMoves) {
             const index = convertDbToHtml([row, col]);
@@ -38,21 +38,20 @@ class UI {
         }
     }
 
-    restartMove() {
-        for (let i = 0; i < this.squares.length; i++) {
-            const target = this.squares[i].querySelector(".target");
-            target.style.backgroundColor = "rgba(137, 137, 137, 0.3)";
-            target.style.display = "none";
-        }
+    highlightSquare(position) {
+        const index = convertDbToHtml(position);
+        this.squares[index].style.opacity = 0.8;
     }
 
-    highlightPiece(piece) {
-        const index = convertDbToHtml(piece.position);
-        this.squares[index].style.opacity = 0.8;
+    unHighlightSquare(position) {
+        const index = convertDbToHtml(position);
+        this.squares[index].style.opacity = 1;
     }
 
     movePiece(from, to) {
         this.restartMove();
+
+        this.unHighlightSquare(from);
 
         const fromIndex = convertDbToHtml(from);
         const toIndex = convertDbToHtml(to);
@@ -62,6 +61,8 @@ class UI {
 
     takePiece(from, to) {
         this.restartMove();
+
+        this.unHighlightSquare(from);
 
         const fromIndex = convertDbToHtml(from);
         const toIndex = convertDbToHtml(to);
@@ -75,30 +76,15 @@ class UI {
         element.parentNode.replaceChild(newCell, element);
     }
 
-    clearElementImg(index) {
-        const element = this.squares[index];
-        // remove any current images
-        const pieceImage = element.querySelector("img");
-        if (pieceImage) {
-            pieceImage.remove();
-        }
-    }
-
-    clearAllEventListeners() {
-        for (let i = 0; i < boardSquares.length; i++) {
-            clearEventListener(boardSquares[i]);
-        }
-    }
-
     setBoard() {
         for (let row = 0; row < this.game.board.state.length; row++) {
             for (let col = 0; col < this.game.board.state[0].length; col++) {
                 const piece = this.game.board.state[row][col];
 
                 const i = convertDbToHtml([row, col]);
-                this.squares[i].querySelector("div.target").style.display =
-                    "none";
+
                 this.clearElementImg(i);
+                this.clearTarget(i);
 
                 if (piece) {
                     this.addImgToElement(piece, i);
@@ -107,37 +93,9 @@ class UI {
         }
     }
 
-    addImgToElement(piece, i) {
-        const element = this.squares[i];
-        const img = document.createElement("img");
-
-        img.src = piece.url;
-        img.className = piece.constructor.name;
-
-        element.appendChild(img);
-    }
-
-    findTargetFromEvent(e) {
-        if (e.className && e.className.includes("cell")) {
-            return e;
-        }
-
-        return this.findTargetFromEvent(e.parentNode);
-    }
-
-    clearAllTargets() {
-        for (let i = 0; i < boardSquares.length; i++) {
-            getTargetElementFromIndex(i).style.display = "none";
-        }
-    }
-
-    getTargetElementFromIndex(i) {
-        return boardSquares[i].querySelector(".target");
-    }
-
-    clearPieceSelection(e) {
-        game.selectedPiece = [];
-        game.restartEventListenersPieces();
+    gameOver(winner, winMethod) {
+        this.clearEventListener(this.boardElement);
+        this.displayWinPopup(winner, winMethod);
     }
 
     displayWinPopup(winner, winMethod) {
@@ -151,5 +109,51 @@ class UI {
         winMethodText.textContent = winMethod;
 
         popup.style.visibility = "visible";
+    }
+
+    findTargetFromEvent(e) {
+        if (e.className && e.className.includes("cell")) {
+            return e;
+        }
+
+        return this.findTargetFromEvent(e.parentNode);
+    }
+
+    restartMove() {
+        for (let i = 0; i < this.squares.length; i++) {
+            this.clearTarget(i);
+            const coor = convertHtmlToDb(i);
+            this.unHighlightSquare(coor);
+        }
+    }
+
+    clearTarget(i) {
+        const target = this.squares[i].querySelector(".target");
+        target.style.backgroundColor = "rgba(137, 137, 137, 0.3)";
+        target.style.display = "none";
+    }
+
+    clearPieceSelection(e) {
+        game.selectedPiece = [];
+        game.restartEventListenersPieces();
+    }
+
+    addImgToElement(piece, i) {
+        const element = this.squares[i];
+        const img = document.createElement("img");
+
+        img.src = piece.url;
+        img.className = piece.constructor.name;
+
+        element.appendChild(img);
+    }
+
+    clearElementImg(index) {
+        const element = this.squares[index];
+        // remove any current images
+        const pieceImage = element.querySelector("img");
+        if (pieceImage) {
+            pieceImage.remove();
+        }
     }
 }

@@ -116,6 +116,7 @@ class Game {
         } else {
             this.ui.movePiece(from, to);
         }
+        this.selectedPiece = null;
     }
 
     startPlayerTurn() {
@@ -137,7 +138,7 @@ class Game {
     gameOver() {
         const winner = this.otherPlayer;
         const winMethod = "Checkmate";
-        displayWinPopup(winner, winMethod);
+        this.ui.gameOver(winner, winMethod);
     }
 
     checkForCheck(board) {
@@ -166,11 +167,11 @@ class Game {
                     ]);
                     totalPossibleTakes = new Set([
                         ...totalPossibleTakes,
-                        ...piece.possibleMoves,
+                        ...piece.possibleTakes,
                     ]);
                     totalOwnPieces = new Set([
                         ...totalOwnPieces,
-                        ...piece.possibleMoves,
+                        ...piece.ownPieces,
                     ]);
                 }
             }

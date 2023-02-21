@@ -3,12 +3,11 @@
     background-color: lightcoral;
     color: white;
     position: fixed;
-    top: 65px;
+    top: 0;
     left: 0;
-    height: calc(100vh - 65px);
+    height: calc(100vh);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     overflow-y: auto;
 }
 
@@ -18,28 +17,13 @@
     font-size: 17px;
 }
 
-.category-list input {
-    width: 200px;
-    border: none;
-    padding: 7px;
-    font-size: 15px;
-    border-radius: 20px;
-    color: lightcoral;
-    text-align: center;
-    margin: 10px 0;
-}
-
-.category-list li {
-    padding: 10px 0;
-    padding-left: 25px;
-    margin: 0 5px;
-    border-radius: 2px;
-}
-
-.category-list li:hover {
-    background-color: white;
-    color: lightcoral;
-    cursor: pointer;
+.logo {
+    text-decoration: none;
+    color: white;
+    font-size: 4vw;
+    font-weight: 800;
+    margin: 0px 15px;
+    margin: auto 15px;
 }
 
 .sidebar-button-container {
@@ -51,9 +35,4 @@
 .sidebar-button-container button {
     width: 220px;
     font-size: 15px;
-}
-
-.sidebar-selected {
-    background-color: white;
-    color: lightcoral;
 }

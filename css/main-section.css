@@ -2,11 +2,10 @@
     display: flex;
     position: absolute;
     width: calc(100vw - 250px);
-    top: 68px;
     left: 250px;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 68px);
+    height: 100vh;
 }
 
 #confirm-container {
