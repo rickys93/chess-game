@@ -1,13 +1,20 @@
 :root {
-    --light-squares: rgb(199, 199, 199);
-    --dark-squares: rgb(79, 40, 40);
+    --light-squares: #8a897e;
+    --dark-squares: #282420;
+    --theme-colour: #581908;
 }
 
 * {
     border: 0px;
     margin: 0px;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
 }
 
 body::-webkit-scrollbar {
     display: none;
+}
+
+.border {
+    border: solid black;
 }

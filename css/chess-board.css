@@ -1,6 +1,6 @@
 .chess-board-container {
-    width: 500px;
-    height: 500px;
+    min-width: 500px;
+    min-height: 500px;
     background-color: var(--light-squares);
     position: relative;
 }
@@ -21,11 +21,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.odd-row img {
-    width: 80%;
-    height: 80%;
 }
 
 .target {

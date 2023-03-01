@@ -1,6 +1,4 @@
-function convertDbToHtml([x, y]) {
-    return x * 8 + y;
-}
+const convertDbToHtml = ([x, y]) => x * 8 + y;
 
 function convertHtmlToDb(coor) {
     const y = coor % 8;

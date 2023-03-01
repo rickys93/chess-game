@@ -65,11 +65,7 @@ class Piece {
 
     get url() {
         let url;
-        if (this.colour === "b") {
-            url = this.imageUrl;
-        } else {
-            url = this.imageUrl.slice(0, -4) + "-white.png";
-        }
+        url = this.imageUrl.slice(0, -4) + "-" + this.colour + ".png";
         return url;
     }
 }
