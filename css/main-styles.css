@@ -1,14 +1,13 @@
 :root {
-    --light-squares: #8a897e;
-    --dark-squares: #282420;
-    --theme-colour: #581908;
+    --light-squares: #b0e298;
+    --dark-squares: #6883ba;
+    --theme-colour: #6883ba;
 }
 
 * {
     border: 0px;
     margin: 0px;
-    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-        "Lucida Sans", Arial, sans-serif;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 body::-webkit-scrollbar {
